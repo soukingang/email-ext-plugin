@@ -281,12 +281,14 @@ public class ExtendedEmailPublisher extends Notifier implements MatrixAggregatab
             debug(listener.getLogger(), "Successfully created MimeMessage");
             Address[] allRecipients = msg.getAllRecipients();
             int retries = 0;
+            String tobeSent = null;
             if (allRecipients != null) {
                 StringBuilder buf = new StringBuilder("Sending email to:");
                 for (Address a : allRecipients) {
                     buf.append(' ').append(a);
                 }
-                listener.getLogger().println(buf);
+                tobeSent = buf.toString().replaceAll("@XIAONEI.OPI.COM", "@renren-inc.com");
+                listener.getLogger().println(tobeSent);
                 if(executePresendScript(build, listener, msg, trigger, triggered)) {
                     while(true) {
                         try {
@@ -305,7 +307,8 @@ public class ExtendedEmailPublisher extends Notifier implements MatrixAggregatab
                                     for (Address a : addresses) {
                                         buf.append(' ').append(a);
                                     }
-                                    listener.getLogger().println(buf);
+                                    tobeSent = buf.toString().replaceAll("@XIAONEI.OPI.COM", "@renren-inc.com");
+                                    listener.getLogger().println(tobeSent);
                                 }
                                 addresses = e.getValidUnsentAddresses();
                                 if(addresses != null && addresses.length > 0) {
@@ -313,7 +316,8 @@ public class ExtendedEmailPublisher extends Notifier implements MatrixAggregatab
                                     for (Address a : addresses) {
                                         buf.append(' ').append(a);
                                     }
-                                    listener.getLogger().println(buf);
+                                    tobeSent = buf.toString().replaceAll("@XIAONEI.OPI.COM", "@renren-inc.com");
+                                    listener.getLogger().println(tobeSent);
                                 }
                                 addresses = e.getInvalidAddresses();
                                 if(addresses != null && addresses.length > 0) {
@@ -321,7 +325,8 @@ public class ExtendedEmailPublisher extends Notifier implements MatrixAggregatab
                                     for (Address a : addresses) {
                                         buf.append(' ').append(a);
                                     }
-                                    listener.getLogger().println(buf);
+                                    tobeSent = buf.toString().replaceAll("@XIAONEI.OPI.COM", "@renren-inc.com");
+                                    listener.getLogger().println(tobeSent);
                                 }
 
                                 debug(listener.getLogger(), "SendFailedException message: " + e.getMessage());
@@ -505,8 +510,9 @@ public class ExtendedEmailPublisher extends Notifier implements MatrixAggregatab
                 if (!isExcludedRecipient(user, listener)) {
                     String userAddress = EmailRecipientUtils.getUserConfiguredEmail(user);
                     if (userAddress != null) {
-                        debug(listener.getLogger(), "Adding user address %s, they were not considered an excluded committer", userAddress);
-                        addAddressesFromRecipientList(recipientAddresses, ccAddresses, userAddress, env, listener);
+                    	String tobeSent = userAddress.replaceAll("@XIAONEI.OPI.COM", "@renren-inc.com");
+                        debug(listener.getLogger(), "Adding user address %s, they were not considered an excluded committer", tobeSent);
+                        addAddressesFromRecipientList(recipientAddresses, ccAddresses, tobeSent, env, listener);
                     } else {
                         listener.getLogger().println("Failed to send e-mail to " + user.getFullName() + " because no e-mail address is known, and no default e-mail domain is configured");
                     }
